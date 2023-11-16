@@ -21,8 +21,6 @@ const EVENT_UNTIL_TICKS = 4;
 const $ = document.querySelector.bind(document);
 let emulator = null;
 
-const binjnesPromise = Binjnes();
-
 // Extract stuff from the vue.js implementation in demo.js.
 class VM {
 	constructor() {
@@ -52,6 +50,10 @@ class VM {
 	}
 }
 
+var binjnesPromise;
+setTimeout(() => {
+	binjnesPromise = Binjnes();
+}, 2000);
 const vm = new VM();
 
 // Copied from demo.js
