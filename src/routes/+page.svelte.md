@@ -18,6 +18,6 @@ Some things I am interested in that I will get around to writing about, eventual
 - "Retrogaming" and the history of game development
 - Desktop / GUI application development, especially cross-platform
 
-Get in touch! [kevin@famicom.party](mailto:kevin@famicom.party)
+Get in touch! [kevin@famicom.party](mailto:kevin@famicom.party) or [@kzurawel@mastodon.gamedev.place](https://mastodon.gamedev.place/@kzurawel)
 
 [About this website](/about)
