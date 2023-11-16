@@ -1,0 +1,92 @@
+{
+	"name": "famicom-party",
+	"type": "dark",
+	"semanticHighlighting": true,
+	"tokenColors": [
+		{
+			"name": "Comments",
+			"scope": "comment.line.ca65,comment.block.ca65",
+			"settings": {
+				"foreground": "#f2d338",
+				"fontStyle": "italic"
+			}
+		},
+		{
+			"name": "Numbers (binary)",
+			"scope": "constant.numeric.binary.ca65",
+			"settings": {
+				"foreground": "#06BDD1"
+			}
+		},
+		{
+			"name": "Numbers (hex)",
+			"scope": "constant.numeric.hex.ca65",
+			"settings": {
+				"foreground": "#07E2FA"
+			}
+		},
+		{
+			"name": "Numbers (decimal)",
+			"scope": "constant.numeric.decimal.ca65",
+			"settings": {
+				"foreground": "#0593A3"
+			}
+		},
+		{
+			"name": "Labels",
+			"scope": "variable.name.label.ca65",
+			"settings": {
+				"foreground": "#10C26F"
+			}
+		},
+		{
+			"name": "Registers",
+			"scope": "variable.language.register.ca65",
+			"settings": {
+				"foreground": "#ff7a48"
+			}
+		},
+		{
+			"name": "Strings",
+			"scope": "string.quoted.single.ca65,string.quoted.double.ca65,constant.character.escape.ca65",
+			"settings": {
+				"foreground": "#10C26F"
+			}
+		},
+		{
+			"name": "Immediate operator (#)",
+			"scope": "keyword.other.immediate.ca65",
+			"settings": {
+				"foreground": "#ff7a48"
+			}
+		},
+		{
+			"name": "Keywords, operators, directives",
+			"scope": "keyword.other.word.ca65,keyword.operator.misc.ca65,constant.language.pseudovars.ca65,constant.language.predefined.ca65,support.function.pseudo.ca65,keyword.control.single,keyword.control.begin,keyword.control.end,storage.type.single,storage.type.begin,storage.type.end",
+			"settings": {
+				"foreground": "#10C26F"
+			}
+		},
+		{
+			"name": "Opcodes",
+			"scope": "entity.name.tag.6502.ca65,entity.name.tag.65c02.ca65,entity.name.tag.6502x.ca65,entity.name.tag.65816.ca65",
+			"settings": {
+				"foreground": "#e3371e"
+			}
+		},
+		{
+			"name": "Default",
+			"scope": "source.ca65",
+			"settings": {
+				"foreground": "#10C26F"
+			}
+		},
+		{
+			"name": "Plaintext",
+			"scope": "source.shell",
+			"settings": {
+				"foreground": "#eeeeee"
+			}
+		}
+	]
+}

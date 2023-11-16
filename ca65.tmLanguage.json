@@ -1,0 +1,239 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "6502/65C02/65816 Assembly",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#literals"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#chars"
+    },
+    {
+      "include": "#operators"
+    },
+    {
+      "include": "#opcodes"
+    },
+    {
+      "include": "#constants"
+    },
+    {
+      "include": "#pseudofuncs"
+    },
+    {
+      "include": "#statements"
+    },
+    {
+      "include": "#storage"
+    },
+    {
+      "include": "#expressions"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.ca65",
+          "match": ";.*$"
+        },
+        {
+          "name": "comment.block.ca65",
+          "begin": "\\/\\*",
+          "end": "\\*\\/"
+        }
+      ]
+    },
+    "literals": {
+      "patterns": [
+        {
+          "name": "constant.numeric.binary.ca65",
+          "match": "%[01]+\\b"
+        },
+        {
+          "name": "constant.numeric.hex.ca65",
+          "match": "(\\$[0-9A-Fa-f]+\\b)|\\b([0-9A-Fa-f]+h\\b)"
+        },
+        {
+          "name": "constant.numeric.decimal.ca65",
+          "match": "\\b[0-9]+\\b"
+        },
+        {
+          "name": "variable.name.label.ca65",
+          "match": ":-+|:\\++|(^\\s*([@\\?]?\\w+)?[:=])"
+        },
+        {
+          "name": "variable.language.register.ca65",
+          "match": "\\b[aAxXyYsS]\\b"
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.ca65",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.ca65",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "chars": {
+      "name": "string.quoted.single.ca65",
+      "begin": "'",
+      "end": "'",
+      "patterns": [
+        {
+          "name": "constant.character.escape.ca65",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.other.immediate.ca65",
+          "match": "#"
+        },
+        {
+          "name": "keyword.other.word.ca65",
+          "match": "\\.(?i:bitnot|mod|bitand|bitxor|shl|shr|bitor|and|xor|or|not)\\b"
+        },
+        {
+          "name": "keyword.operator.misc.ca65",
+          "match": "=|<>|:=|\\+|-|\\*|/|\\&|~|\\||<<|>>|\\&\\&|\\|\\||!|<|>|<=|>="
+        }
+      ]
+    },
+    "opcodes": {
+      "patterns": [
+        {
+          "comment": "6502 Opcodes",
+          "name": "entity.name.tag.6502.ca65",
+          "match": "\\b(?i:adc|and|asl|bcc|bcs|beq|bit|bmi|bne|bpl|brk|bvc|bvs|clc|cld|cli|clv|cmp|cpx|cpy|dec|dex|dey|eor|inc|inx|iny|jmp|jsr|lda|ldx|ldy|lsr|nop|ora|pha|php|pla|plp|rol|ror|rti|rts|sbc|sec|sed|sei|sta|stx|sty|tax|tay|tsx|txa|txs|tya)\\b"
+        },
+        {
+          "comment": "65C02 Opcodes",
+          "name": "entity.name.tag.65c02.ca65",
+          "match": "\\b(?i:bra|phx|phy|plx|ply|stz|trb|tsb|bbr0|bbr1|bbr2|bbr3|bbr4|bbr5|bbr6|bbr7|bbs0|bbs1|bbs2|bbs3|bbs4|bbs5|bbs6|bbs7|rmb0|rmb1|rmb2|rmb3|rmb4|rmb5|rmb6|rmb7|smb0|smb1|smb2|smb3|smb4|smb5|smb6|smb7)\\b"
+        },
+        {
+          "comment": "6502X Opcodes",
+          "name": "entity.name.tag.6502x.ca65",
+          "match": "\\b(?i:alr|anc|arr|axs|dcp|isc|las|lax|rla|rra|sax|slo|sre)\\b"
+        },
+        {
+          "comment": "65816 Opcodes",
+          "name": "entity.name.tag.65816.ca65",
+          "match": "\\b(?i:brl|cop|jml|jsl|mvn|mvp|pea|pei|per|phb|phd|phk|plb|pld|rep|rtl|sep|stp|tcd|tcs|tdc|tsc|txy|tyx|wai|wdm|xba|xce)\\b"
+        },
+        {
+          "comment": "65816 Opcode Aliases",
+          "name": "entity.name.tag.65816.ca65",
+          "match": "\\b(?i:cpa|dea|ina|swa|tad|tas|tda|tsa)\\b"
+        },
+        {
+          "comment": "4510 Opcode Aliases",
+          "name": "entity.name.tag.4510.ca65",
+          "match": "\\b(?i:lbcc|lbcs|lbeq|lbmi|lbne|lbpl|lbvc|lbvs)\\b"
+        },
+        {
+          "comment": "Macpack generic",
+          "name": "entity.name.tag.generic.ca65",
+          "match": "\\b(?i:add|sub|bge|blt|bgt|ble|bnz|bze)\\b"
+        },
+        {
+          "comment": "Macpack longbranch",
+          "name": "entity.name.tag.longbranch.ca65",
+          "match": "\\b(?i:jeq|jne|jmi|jpl|jcs|jcc|jvs|jvc)\\b"
+        }
+      ]
+    },
+    "constants": {
+      "patterns": [
+        {
+          "name": "constant.language.pseudovars.ca65",
+          "match": "(\\*|\\.(?i:asize|cpu|isize|time|version))\\b"
+        },
+        {
+          "name": "constant.language.predefined.ca65",
+          "match": "(?i:__APPLE2__|__APPLE2ENH__|__ATARI2600__|__ATARI5200__|__ATARI__|__ATARIXL__|__ATMOS__|__BBC__|__C128__|__C16__|__C64__|__CBM__|__CBM510__|__CBM610__|__CX16__|__GEOS__|__GEOS_APPLE__|__GEOS_CBM__|__LUNIX__|__LYNX__|__NES__|__OSIC1P__|__PET__|__PLUS4__|__SIM6502__|__SIM65C02__|__SUPERVISION__|__VIC20__)\\b"
+        },
+        {
+          "name": "constant.language.cpu.ca65",
+          "match": "(?i:CPU_6502|CPU_65SC02|CPU_65C02|CPU_65816|CPU_SWEET16|CPU_HUC6280|CPU_4510|CPU_6502DTV|CPU_ISET_6502|CPU_ISET_65SC02|CPU_ISET_65C02|CPU_ISET_65816|CPU_SWEET16|CPU_HUC6280|CPU_4510|CPU_ISET_6502DTV)\\b"
+        }
+      ]
+    },
+    "pseudofuncs": {
+      "patterns": [
+        {
+          "name": "support.function.pseudo.ca65",
+          "match": "\\.(?i:paramcount|addrsize|bank|bankbyte|blank|concat|const|hibyte|hiword|ident|left|lobyte|loword|match|max|mid|min|ref|referenced|right|sizeof|strat|sprintf|string|strlen|tcount|xmatch)\\b"
+        },
+        {
+          "name": "support.function.macpack.ca65",
+          "match": "\\.(?i:scrcode)\\b"
+        },
+        {
+          "name": "support.function.control.ca65",
+          "match": "\\.(?i:def|defined|definedmacro|ismnem|ismnemonic|out)\\b"
+        }
+      ]
+    },
+    "statements": {
+      "patterns": [
+        {
+          "name": "keyword.control.single.ca65",
+          "match": "\\.(?i:a16|a8|assert|else|elseif|end|error|exitmac|exitmacro|fatal|i16|i8|p02|p4510|p816|pc02|pdtv|psc02|setcpu|warning)\\b"
+        },
+        {
+          "name": "keyword.control.begin.ca65",
+          "match": "\\.(?i:if|ifblank|ifconst|ifdef|ifnblank|ifndef|ifnref|ifp02|ifp4510|ifp816|ifpc02|ifpdtv|ifpsc02|ifref|repeat)\\b"
+        },
+        {
+          "name": "keyword.control.end.ca65",
+          "match": "\\.(?i:end)(?i:if|rep|repeat)\\b"
+        }
+      ]
+    },
+    "storage": {
+      "patterns": [
+        {
+          "name": "storage.type.single.ca65",
+          "match": "\\.(?i:addr|align|ascizz|autoimport|bankbytes|bss|byt|byte|case|charmap|code|condes|constructor|data|dbyt|debuginfo|define|delmac|delmacro|destructor|dword|export|exportzp|faraddr|feature|fileopt|fopt|forceimport|global|globalzp|hibytes|import|importzp|incbin|include|interruptor|linecont|list|listbytes|lobytes|local|localchar|macpack|org|pagelen|pagelength|popcpu|popseg|pushcpu|pushseg|reloc|res|rodata|segment|set|smart|tag|undef|undefine|word|zp|zeropage)\\b"
+        },
+        {
+          "name": "storage.type.begin.ca65",
+          "contentName": "entity.name.function.ca65",
+          "begin": "\\.(?i:enum|macro|mac|proc|scope|struct|union)\\s*",
+          "end": "\\s"
+        },
+        {
+          "name": "storage.type.end.ca65",
+          "match": "\\.(?i:end)(?i:enum|macro|mac|proc|scope|struct|union)\\s*"
+        }
+      ]
+    },
+    "expressions": {
+      "patterns": [
+        {
+          "match": "\\b(\\w+)(::)\\b",
+          "captures": {
+            "1": {
+              "name": "entity.name.function.accessor.ca65"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "scopeName": "source.ca65"
+}

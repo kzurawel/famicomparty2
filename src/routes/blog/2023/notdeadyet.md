@@ -1,0 +1,23 @@
+---
+title: Not dead yet
+date: 2023-11-15
+summary: What I've been up to over the last year.
+tags:
+  - book
+  - software
+  - updates
+---
+
+<script>
+  import Margin from '$lib/components/Margin.svelte';
+</script>
+
+It's been a long time since I've posted here. That's partly because I've been busy with a variety of things, but also because my blogging setup was not really working out for me. I built the previous version of this site (both the book and the blog) on [Zola](https://www.getzola.org), a Rust-based static site generator. Zola has some great features - its syntax highlighting is particularly nice - but Rust is just not my thing.<Margin id="rust">I've seriously tried to learn Rust several times, and each time I bounce right off. It's a very interesting language with some great ideas that no matter how much I try, I do not find enjoyable to work in.</Margin> So, while Zola more or less did what I wanted, it was hard to extend and every time I used it, I had to spend almost as much time looking up how it worked as I did writing whatever I wanted to write.
+
+Over the last year I investigated a ton of alternative static site generators. I tried out [Hugo](https://gohugo.io), which had the advantage of being written in Go, a language I use frequently, but it was surprisingly inflexible about things like adding support for 6502 assembly syntax highlighting. I also tried out [Hexo](https://hexo.io) and [Astro](https://astro.build), as well as other options like Python-based [Pelican](https://getpelican.com/). For a while, I even considered going back to a full-featured, database-backed CMS like WordPress or Django. Then, on a whim, I decided to try out [SvelteKit](https://kit.svelte.dev). I had used Svelte in the past and liked it, and SvelteKit handled the backend and routing aspects of a site while still compiling out to static files. I spent about three weeks moving and adapting everything in the book, and it was relatively easy. Adding new chapters (or blog posts like this one) in SvelteKit is far easier than my old workflow under Zola ever was, and it's a framework that I know well and can easily build upon.
+
+About that "adaptation": with a new site framework, it was time to revisit some of the tools I had been using in the past. Syntax highlighting for the book is now powered by [Shiki](https://shiki.matsu.io), the same engine that powers syntax highlighting in VS Code. Making a new color theme for it took some work, but I'm extremely pleased with the result. Second, the book's emulator is now [binjnes](https://github.com/binji/binjnes). JSNES, the previous site emulator, was written in JavaScript, but it was not a particularly accurate emulator. binjnes is an accurate, performant emulator that runs in the browser via WASM. The main downside is that I removed the mobile touch controls that appeared starting in Chapter 16, but I feel that the improvement in emulation accuracy and performance is worth it.<Margin id="controls">I'm still working on adding those controls back. <a href="https://github.com/ninjadynamics/ninjapad">NinjaPad</a>, which uses binjnes internally, implements some very nice mobile controls, but it assumes that it will run as a full-screen webapp, not as a small part of another page. More to come there.</Margin>
+
+I've also been juggling a number of side projects. NES Lightbox, my Electron-based graphics tool, was aging rapidly and no longer ran properly on newer systems, which led me to replace it in the book with NEXXT. I still want to create a cross-platform, easy-to-use graphics tool, though. I spent a few months building out a clone of NES Screen Tool using [Fyne](https://fyne.io). It's an interesting Go-based GUI framework, where every widget is just a drawing canvas and a layout function. I was able to make significant progress, but nearly every situation required a custom widget with a custom layout, and it started to become quite complex. Additionally, the framework lacks even basic accessibility features, and it seems unlikely that they will be added anytime soon. After a huge amount of research and test projects (more on that in a future post), I've settled on [Wails](https://wails.io), a Go-based, Electron-like framework that uses the user's built-in webview instead of bundling an entire copy of Chrome. It's still in the earliest stages of development, but I hope to re-use a fair bit of code from my Fyne project.
+
+That's about all for now. My goal is to post to the blog at least twice a month, while continuing to work on my graphics editor and on the next chapter of Famicom Party. We'll see if I can keep it up!
