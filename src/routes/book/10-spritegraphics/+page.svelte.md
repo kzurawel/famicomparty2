@@ -253,8 +253,8 @@ of the pattern table display.
 ### Making Your Own Tiles
 
 To help you get started, I have created a starter .chr file that features
-some basic sprites and a full font in the background table. Download
-<a href="https://famicom.party/book/projects/10-spritegraphics/src/graphics.chr">graphics.chr</a>
+some basic sprites and a full font in the background table.
+Download <a href="https://famicom.party/book/projects/10-spritegraphics/src/graphics.chr">graphics.chr</a>
 and open it in NEXXT ("Tilesets" &rarr; "Open CHR..." &rarr; select graphics.chr).
 
 To edit or create tiles, click on the space in the pattern table
@@ -275,8 +275,7 @@ Once you have created a set of tiles to work with, save your work by choosing
 
 ## Displaying Sprites In Your Game
 
-_Download the full source code for this example:_
-<a href="https://famicom.party/book/projects/10-spritegraphics.zip">10-spritegraphics.zip</a>
+_Download the full source code for this example:_ <a href="https://famicom.party/book/projects/10-spritegraphics.zip">10-spritegraphics.zip</a>
 
 In order to display our tiles in a game, we first need to make sure
 we load the .chr file that contains them. In our last project, we

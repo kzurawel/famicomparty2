@@ -196,8 +196,8 @@ code into the file:
 
 .segment "CODE"
 .proc irq_handler
-  RTI ; testing out a comment
-.endproc ; just for fun
+  RTI
+.endproc
 
 .proc nmi_handler
   RTI
@@ -206,9 +206,15 @@ code into the file:
 .proc reset_handler
   SEI
   CLD
-  LDX #$00
+  LDX #$40
+  STX $4017
+  LDX #$FF
+  TXS
+  INX
   STX $2000
   STX $2001
+  STX $4010
+  BIT $2002
 vblankwait:
   BIT $2002
   BPL vblankwait

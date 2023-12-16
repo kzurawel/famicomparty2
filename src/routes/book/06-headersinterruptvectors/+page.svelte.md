@@ -157,12 +157,21 @@ Here is the test project's reset handler:
 .proc reset_handler
   SEI
   CLD
-  LDX #$00
+  LDX #$40
+  STX $4017
+  LDX #$FF
+  TXS
+  INX
   STX $2000
   STX $2001
+  STX $4010
+  BIT $2002
 vblankwait:
   BIT $2002
   BPL vblankwait
+vblankwait2:
+  BIT $2002
+  BPL vblankwait2
   JMP main
 .endproc
 ```
@@ -188,15 +197,21 @@ before doing anything else because we don't want our code to jump to the IRQ han
 before it has finished initializing the system. `CLD` stands for "Clear Decimal mode bit",
 disabling "binary-coded decimal" mode on the 6502.<Margin id="bcd-mode">Due to convoluted licensing issues surrounding the 6502 and Ricoh's legal ability to manufacture it, the 2A03 used in the NES has binary-coded decimal mode circuitry within it, but all electrical traces that would connect those circuits to the rest of the chip have been cut. `CLD` (and its counterpart, `SED`) do nothing on the NES as a result, but calling `CLD` as part of a reset handler just-in-case is considered best practice.</Margin>
 
-The next three lines go back to familiar loads and stores. We've seen `$2001` before -
+The next four lines disable audio IRQs (which are handled separately from the `SEI` we used earlier) and set up the "stack". I'm not going to go into detail on these yet; this reset code is something that you will likely copy verbatim into each project, so it's not something you will need to change on your own. I'll cover both of these much later.
+
+The next three lines (after `INX`) go back to familiar loads and stores. We've seen `$2001` before -
 it's PPUMASK - but `$2000` is new. This address is commonly referred to as PPUCTRL, and
 it changes the operation of the PPU in ways more complicated than PPUMASK's ability to
 turn rendering on or off. We won't cover PPUCTRL in detail until later in this book, when
 we've seen more of how the NES PPU draws graphics. Like PPUMASK, it is a set of bit fields.
 For the purpose of initializing the NES, the main thing to point out is that bit 7 controls
-whether or not the PPU will trigger an NMI every frame. By storing `$00` to both
+whether or not the PPU will trigger an NMI every frame. After the `INX` opcode, the X register
+holds a value of `$00`. By storing `$00` to both
 PPUCTRL and PPUMASK, we turn off NMIs and disable rendering to the screen during startup, to
-ensure that we don't draw random garbage to the screen.
+ensure that we don't draw random garbage to the screen. Writing `$00` to `$4010` turns off
+DMC IRQs; this is another part of the audio processing unit (APU) which will be covered much later.
+For now, just know that doing this in your reset handler helps prevent difficult-to-debug glitches
+in your projects.
 
 The remainder of the reset handler is a loop that waits for the PPU to fully boot up before
 moving on to our main code. The PPU takes about 30,000 CPU cycles to become stable from
@@ -212,8 +227,8 @@ our game's actual code.
 
 The reset handler our test project uses is the most basic handler that will reliably start up
 the NES in a known-good state. There are many other tasks that the reset handler can take
-care of, like setting up the Audio Processing Unit (APU) and clearing out RAM.
-As we add more functionality to our games, we will expand the role of the reset handler as well.
+care of, like clearing out RAM. As we add more functionality to our games, we will expand
+the role of the reset handler as well.
 
 We have now covered all of the code from the test project - congratulations! After the last few
 chapters, you might be thinking to yourself "this is incredibly complicated, why bother?"

@@ -165,7 +165,7 @@ What does this code do? Let's take it line-by-line:
 You now understand enough assembly to work out what most of the test project is doing. Let's
 look specifically at the `main` portion, reproduced here:
 
-```ca65 showLineNumbers{25}
+```ca65 showLineNumbers{34}
 .proc main
   LDX $2002
   LDX #$3f
@@ -210,7 +210,7 @@ lets your code write a byte of data to that address. To set the address you want
 bytes of data to `$2006` - first the "high" (left) byte, followed by the "low" (right) byte. Here's how
 our test project does that:
 
-```ca65 showLineNumbers{27}
+```ca65 showLineNumbers{36}
   LDX #$3f
   STX $2006
   LDX #$00
@@ -223,7 +223,7 @@ to `$2006` - in other words, it sets the address for any following writes to PPU
 
 To store data at the selected PPU memory address, store a byte to `$2007`:
 
-```ca65 showLineNumbers{31}
+```ca65 showLineNumbers{40}
   LDA #$29
   STA $2007
 ```
@@ -245,7 +245,7 @@ next write to PPUADDR will always be considered a "high" byte of an address.
 
 In our test project, we read ("load") from PPUSTATUS before attempting to write an address to PPUADDR:<Margin id="writing-to-ppu">This process - reading from PPUSTATUS, writing two bytes to PPUADDR, and writing bytes to PPUDATA - is something that we will be using <em>all the time</em>. Anything that changes what is displayed to the screen uses this process to tell the PPU what to draw, and virtually everything in a game is going to change what is displayed to the screen. Learning this process well now will be very useful to you in future chapters.</Margin>
 
-```ca65 showLineNumbers{26}
+```ca65 showLineNumbers{35}
   LDX $2002
   LDX #$3f
   STX $2006
@@ -289,7 +289,7 @@ from one area to another.
 Let's look again at our test project's code. What value does our test project write
 to PPUMASK?
 
-```ca65 showLineNumbers{33}
+```ca65 showLineNumbers{42}
   LDA #%00011110
   STA $2001
 ```
@@ -320,7 +320,7 @@ continuously. Unless we write code to keep the processor busy, it will
 continue reading (empty) memory and "executing" it, which could lead to
 disastrous results. Thankfully, there's an easy solution to this problem:
 
-```ca65 showLineNumbers{35}
+```ca65 showLineNumbers{44}
 forever:
   JMP forever
 ```

@@ -36,7 +36,7 @@ PPUDATA   = $2007
 
 With these constants, our main code becomes much more readable:
 
-```ca65 showLineNumbers{25}
+```ca65 showLineNumbers{34}
 .proc main
   LDX PPUSTATUS
   LDX #$3f
@@ -114,12 +114,21 @@ First, let's create `reset.asm`, including the `.export` directive:
 .proc reset_handler
   SEI
   CLD
-  LDX #$00
-  STX PPUCTRL
-  STX PPUMASK
+  LDX #$40
+  STX $4017
+  LDX #$FF
+  TXS
+  INX
+  STX $2000
+  STX $2001
+  STX $4010
+  BIT $2002
 vblankwait:
-  BIT PPUSTATUS
+  BIT $2002
   BPL vblankwait
+vblankwait2:
+  BIT $2002
+  BPL vblankwait2
   JMP main
 .endproc
 ```
