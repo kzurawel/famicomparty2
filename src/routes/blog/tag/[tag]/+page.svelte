@@ -47,11 +47,21 @@
 	ul {
 		list-style-type: none;
 		padding-left: 1rem;
+		-webkit-padding-start: 0;
+	}
+
+	li {
+		margin-bottom: 4rem;
 	}
 
 	h2 {
-		margin-top: 0;
-		margin-bottom: 1rem;
+		margin-top: 1rem;
+		margin-bottom: 1.5rem;
+	}
+
+	.pubdate img {
+		position: relative;
+		top: 2px;
 	}
 
 	.tag {
