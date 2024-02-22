@@ -14,30 +14,44 @@ body > footer {
 }
 
 @font-face {
-	font-family: 'Computer Modern Serif';
-	src: url('/fonts/cmunrm.woff');
+  font-family: 'Korrin';
+  src: url('/fonts/QTKorrin.woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Korrin';
+  src: url('/fonts/QTKorrin-Italic.woff2');
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+	font-family: 'DejaVu Sans Mono';
+	src: url('/fonts/DejaVuSansMono.woff2') format('woff2');
 	font-weight: normal;
 	font-style: normal;
 }
 
 @font-face {
-	font-family: 'Computer Modern Serif';
-	src: url('/fonts/cmunsl.woff');
+	font-family: 'DejaVu Sans Mono';
+	src: url('/fonts/DejaVuSansMono-Oblique.woff2') format('woff2');
 	font-weight: normal;
 	font-style: italic;
 }
 
 @font-face {
-	font-family: 'Victor Mono';
-	src: url('/fonts/VictorMono-Medium.woff2') format('woff2');
-	font-weight: normal;
+	font-family: 'DejaVu Sans Mono';
+	src: url('/fonts/DejaVuSansMono-Bold.woff2') format('woff2');
+	font-weight: bold;
 	font-style: normal;
 }
 
 @font-face {
-	font-family: 'Victor Mono';
-	src: url('/fonts/VictorMono-MediumOblique.woff2') format('woff2');
-	font-weight: normal;
+	font-family: 'DejaVu Sans Mono';
+	src: url('/fonts/DejaVuSansMono-BoldOblique.woff2') format('woff2');
+	font-weight: bold;
 	font-style: italic;
 }
 
@@ -50,8 +64,9 @@ body {
 	background-color: #fff3dc;
 	color: #111;
 	margin: 0 auto;
-	font-family: 'Computer Modern Serif', Palatino, 'Palatino Linotype', 'Palatino LT STD',
-		'Book Antiqua', Georgia, serif;
+	// font-family: 'Computer Modern Serif', Palatino, 'Palatino Linotype', 'Palatino LT STD',
+		// 'Book Antiqua', Georgia, serif;
+  font-family: 'Korrin', sans-serif;
 }
 
 h1 {
@@ -275,18 +290,18 @@ table.fullwidth {
 
 div.table-wrapper {
 	overflow-x: auto;
-	font-family: 'Trebuchet MS', 'Gill Sans', 'Gill Sans MT', sans-serif;
 }
 
 div.table-wrapper th,
 div.table-wrapper td {
 	padding: 0.2rem 2rem;
 	text-align: left;
+	font-size: 1.2rem;
 }
 
 div.table-wrapper th {
-	font-size: 1.1rem;
 	text-decoration: underline;
+  font-size: 1.3rem;
 }
 
 div.table-wrapper td:first-child,
@@ -319,8 +334,9 @@ div.table-wrapper:has(+ canvas) {
 
 code {
 	color: #88030f;
-	font-family: 'Victor Mono', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
-	font-size: 1.1rem;
+	// font-family: 'Victor Mono', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  font-family: 'DejaVu Sans Mono';
+	font-size: 1.25rem;
 	line-height: 1.42;
 }
 
