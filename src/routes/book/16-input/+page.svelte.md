@@ -410,10 +410,10 @@ the ring counter technique we saw earlier:
 .segment "CODE"
 .export read_controller1
 .proc read_controller1
+  PHP
   PHA
   TXA
   PHA
-  PHP
 
   ; write a 1, then a 0, to CONTROLLER1
   ; to latch button states
@@ -433,10 +433,10 @@ get_buttons:
                   ; and leftmost 0 of pad1 into carry flag
   BCC get_buttons ; Continue until original "1" is in carry flag
 
-  PLP
   PLA
   TAX
   PLA
+  PLP
   RTS
 .endproc
 ```
@@ -467,22 +467,18 @@ enemies can take up a big chunk of zero-page addresses.
 Next, let's update the NMI handler to read controller state
 once per frame:
 
-```ca65 showLineNumbers{18}
+```ca65
 .import read_controller1
 
 .proc nmi_handler
-  LDA #$00
-  STA OAMADDR
-  LDA #$02
-  STA OAMDMA
-  LDA #$00
+  ; standard start-of-NMI code not shown
 
   ; read controller
   JSR read_controller1
 ```
 
 Remember that you need to import any subroutines you want
-to use that are exported in a different file (line 18).
+to use that are exported in a different file.
 
 Everything is in place to work with controller data. Now, it's
 time to update the `update_player`
@@ -501,15 +497,8 @@ approach will let us focus on the controller.
 
 The updated `update_player` subroutine is as follows:
 
-```ca65 showLineNumbers{102}
+```ca65
 .proc update_player
-  PHP  ; Start by saving registers,
-  PHA  ; as usual.
-  TXA
-  PHA
-  TYA
-  PHA
-
   LDA pad1        ; Load button presses
   AND #BTN_LEFT   ; Filter out all but Left
   BEQ check_right ; If result is zero, left not pressed
@@ -530,12 +519,6 @@ check_down:
   BEQ done_checking
   INC player_y
 done_checking:
-  PLA ; Done with updates, restore registers
-  TAY ; and return to where we called this
-  PLA
-  TAX
-  PLA
-  PLP
   RTS
 .endproc
 ```

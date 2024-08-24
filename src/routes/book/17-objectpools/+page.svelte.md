@@ -370,17 +370,6 @@ shorter NMI handler looks like this:
 .endproc
 ```
 
-Notice that the NMI handler has a new beginning and ending.
-Previously, all of our game logic occurred in the NMI handler.
-Nothing else could ever interrupt our game logic or stealthily
-change the memory addresses we were working with, but now it's
-very possible for something in main code to change memory
-locations or registers that NMI expects to use, and vice-versa.
-(We literally just did that sort of thing, by having both NMI
-and `main` make use of `sleeping`.) This means that our NMI
-handler must now act like any other subroutine, saving
-the state of registers and restoring them when it is done.
-
 Next, let's move the items we removed from the
 NMI handler into the main loop. Here is just the
 `mainloop` portion of our new `.proc main`:
@@ -477,13 +466,6 @@ Here is the drawing subroutine (in `enemies.asm`):
 ```ca65 showLineNumbers{126}
 .export draw_enemy
 .proc draw_enemy
-  PHP
-  PHA
-  TXA
-  PHA
-  TYA
-  PHA
-
   ; First, check if the enemy is active.
   LDX current_enemy
   LDA enemy_flags,X
@@ -588,17 +570,11 @@ oam_address_found:
   STA $0200, Y
 
 done:
-  PLA
-  TAY
-  PLA
-  TAX
-  PLA
-  PLP
   RTS
 .endproc
 ```
 
-Notice that on lines 139-140, a branch (`BNE`) skips over
+Notice that a branch (`BNE`) skips over
 a `JMP` to near the end of the subroutine, rather than
 branching directly to that label. This is intentional;
 a branch command, when assembled into machine code, takes
@@ -638,16 +614,9 @@ by its Y velocity (from `enemy_y_vels`)
 and, if it is greater than 239 (the bottom of the screen),
 marks it as inactive. This subroutine is also in `enemies.asm`.
 
-```ca65 showLineNumbers{12}
+```ca65
 .export update_enemy
 .proc update_enemy
-  PHP
-  PHA
-  TXA
-  PHA
-  TYA
-  PHA
-
   ; Check if this enemy is active.
   LDX current_enemy
   LDA enemy_flags, X
@@ -668,12 +637,6 @@ marks it as inactive. This subroutine is also in `enemies.asm`.
   STA enemy_flags, X
 
 done:
-  PLA
-  TAY
-  PLA
-  TAX
-  PLA
-  PLP
   RTS
 .endproc
 ```
@@ -702,14 +665,6 @@ Here is our new subroutine, `process_enemies`, in
 ```ca65
 .export process_enemies
 .proc process_enemies
-  ; Push registers onto the stack
-  PHP
-  PHA
-  TXA
-  PHA
-  TYA
-  PHA
-
   ; Start with enemy zero.
   LDX #$00
 
@@ -736,7 +691,7 @@ spawn_or_timer:
   STA enemy_timer
   JMP prep_next_loop
 spawn_enemy:
-	; TODO!
+  ; TODO!
 
 prep_next_loop:
   INX
@@ -755,14 +710,6 @@ decrement:
   DEC enemy_timer
 
 done:
-  ; Restore registers, then return
-  PLA
-  TAY
-  PLA
-  TAX
-  PLA
-  PLP
-
   RTS
 .endproc
 ```

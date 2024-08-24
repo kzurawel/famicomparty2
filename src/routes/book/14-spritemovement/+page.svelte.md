@@ -197,9 +197,13 @@ In most higher-level programming languages, this is taken care of for you
 through concepts like "variable scope" or "lifetimes". In assembly, though,
 you must handle saving and restoring the state of all registers (including
 the processor status register!) if you need those values to remain the
-same when returning from a subroutine.<Margin id="irqs">In general, it is good practice to always save and restore registers when subroutines are involved. Interrupts like NMI or IRQ can be called at any time - even while you are inside of another subroutine! - and it can be difficult to accurately predict what value is in a register if your subroutines / interrupt handlers are not written in a "defensive" manner.</Margin>
+same when returning from a subroutine.<Margin id="whentosave">Thankfully, since
+the NES is single-threaded, the only thing that can alter register values
+without your knowledge is an interrupt vector - by definition, they _interrupt_
+the normal flow of your code. That means that the main place to use this
+technique is in your NMI handler.</Margin>
 
-## Subroutine Register Management
+## Register Management
 
 To help you save and restore the contents of registers, the 6502
 provides four opcodes: `PHA`, `PHP`, `PLA`, and `PLP`. `PHA` and
@@ -212,10 +216,10 @@ values, you must first transfer them into the accumulator (with
 `TXA` / `TYA`), and to restore them you must pull into the
 accumulator and then transfer again (with `TAX` / `TAY`).
 
-Let's look at an example subroutine that uses these new opcodes:
+Let's look at how you might use these new opcodes in your NMI handler:
 
 ```ca65
-.proc my_subroutine
+.proc nmi_handler
   PHP
   PHA
   TXA
@@ -223,7 +227,7 @@ Let's look at an example subroutine that uses these new opcodes:
   TYA
   PHA
 
-  ; your actual subroutine code here
+  ; your actual NMI code here
 
   PLA
   TAY
@@ -231,11 +235,11 @@ Let's look at an example subroutine that uses these new opcodes:
   TAX
   PLA
   PLP
-  RTS
+  RTI
 .endproc
 ```
 
-When `my_subroutine` is called (with `JSR my_subroutine`), the
+When the NMI handler is called, the
 first six opcodes preserve the state of the registers on the stack
 before doing anything else. `PHP`, storing the state of the processor
 status register, comes first, because the processor status register
@@ -245,13 +249,15 @@ like `TXA`. With the processor status register stored away on the
 stack, we next push the value of the accumulator, and then transfer and
 push the values of the X and Y registers. With everything stored on
 the stack, we are free to use all of the 6502's registers without
-worrying about what the code that called our subroutine expects
-to find in them. Once the subroutine code is finished, we reverse
+worrying about what the code that was interrupted expects
+to find in them. Once the NMI handler is finished, we reverse
 all of the storing we did at the beginning. We restore everything in the
 opposite order of how we stored it, first pulling and transferring to
 the Y and X registers, then the accumulator, and then the processor
-status register. Finally, we end with `RTS`, which returns program flow
-to the point where we called the subroutine.<Margin id="rts">If you forget to include <code>RTS</code> at the end of your subroutine, the 6502 will not return to where the subroutine was called and will instead happily continue with the next byte after your subroutine code. The processor doesn't know anything about <code>.proc</code>s, they are simply a tool to help <em>you</em> organize your code.</Margin>
+status register. Finally, we end with `RTI`, which returns program flow
+to the point where the NMI handler was called. For a subroutine, we
+would end with `RTS` (Return from Subroutine) instead.<Margin id="rts">If you forget to include <code>RTS</code> at the end of your subroutine, the 6502 will not return to where the subroutine was called and will instead happily continue with the next byte after your subroutine code. The processor doesn't know anything about <code>.proc</code>s, they are simply a tool to help <em>you</em> organize your code.</Margin>
+
 
 ## Your First Subroutine: Drawing the Player
 
@@ -266,19 +272,10 @@ refresher, we need to write four bytes of data for each 8 pixel by
 8 pixel sprite tile: the sprite's Y position, tile number, special
 attributes / palette, and X position. The tile number and palette
 for each of the four sprites that make up the player ship will not
-change, so let's start there. We will also save and restore the
-system's registers at the start and end of our subroutine.
+change, so let's start there.
 
 ```ca65
 .proc draw_player
-  ; save registers
-  PHP
-  PHA
-  TXA
-  PHA
-  TYA
-  PHA
-
   ; write player ship tile numbers
   LDA #$05
   STA $0201
@@ -297,13 +294,7 @@ system's registers at the start and end of our subroutine.
   STA $020a
   STA $020e
 
-  ; restore registers and return
-  PLA
-  TAY
-  PLA
-  TAX
-  PLA
-  PLP
+  ; return to where the subroutine was called
   RTS
 .endproc
 ```
@@ -317,9 +308,7 @@ palette zero (the first palette), so the code to write sprite
 attributes is much shorter. `$0202`, `$0206`, `$020a`, and `$020e`
 are the bytes immediately following the previous tile number
 bytes, and so they hold the attributes for each of the first
-four sprites. Finally, we restore all of the registers, in the
-opposite order of how we stored them, and use `RTS` to end
-the subroutine.
+four sprites. Finally, we use `RTS` to end the subroutine.
 
 What about the _location_ of each tile on screen? For that, we
 will need to use `player_x`, `player_y`, and some basic math.
@@ -333,14 +322,13 @@ find the positions of the other three tiles.
 
 In the past, we have used `INC` / `DEC` to add or subtract.
 When adding or subtracting more than 1, however, there
-are more efficient opcodes. `ADC` ("ADd with Carry")
+are more efficient opcodes - specifically, `ADC` ("ADd with Carry").
 
 Here's what that
 looks like (previous code reduced to just comments):
 
 ```ca65
 .proc draw_player
-  ; save registers
   ; store tile numbers
   ; store attributes
 
@@ -377,7 +365,8 @@ looks like (previous code reduced to just comments):
   ADC #$08
   STA $020f
 
-  ; restore registers and return
+  ; return to where the subroutine was called
+  RTS
 .endproc
 ```
 
@@ -395,8 +384,16 @@ We already set up the initial values of `player_x` and
 new subroutine as part of the NMI handler, so it runs
 every frame:
 
-```ca65 showLineNumbers{14}
+```ca65 showLineNumbers{15}
 .proc nmi_handler
+  ; save registers
+  PHP
+  PHA
+  TXA
+  PHA
+  TYA
+  PHA
+
   LDA #$00
   STA OAMADDR
   LDA #$02
@@ -408,6 +405,15 @@ every frame:
   LDA #$00
   STA $2005
   STA $2005
+
+  ; restore registers
+  PLA
+  TAY
+  PLA
+  TAX
+  PLA
+  PLP
+
   RTI
 .endproc
 ```
@@ -449,13 +455,6 @@ it into its own subroutine, `update_player`:
 
 ```ca65
 .proc update_player
-  PHP
-  PHA
-  TXA
-  PHA
-  TYA
-  PHA
-
   LDA player_x
   CMP #$e0
   BCC not_at_right_edge
@@ -484,13 +483,7 @@ direction_set:
 move_right:
   INC player_x
 exit_subroutine:
-  ; all done, clean up and return
-  PLA
-  TAY
-  PLA
-  TAX
-  PLA
-  PLP
+  ; all done, return
   RTS
 .endproc
 ```
@@ -540,7 +533,7 @@ we restore all of the registers and return from the subroutine.
 Let's call our new subroutine inside of the NMI handler
 to finish off our example project:
 
-```ca65 showLineNumbers{20}
+```ca65 showLineNumbers{30}
   ; update tiles *after* DMA transfer
   JSR update_player
   JSR draw_player

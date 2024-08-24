@@ -22,21 +22,21 @@ vblankwait:
   BIT $2002
   BPL vblankwait
 
-	LDX #$00
-	LDA #$FF
+  LDX #$00
+  LDA #$FF
 clear_oam:
-	STA $0200,X ; set sprite y-positions off the screen
-	INX
-	INX
-	INX
-	INX
-	BNE clear_oam
+  STA $0200,X ; set sprite y-positions off the screen
+  INX
+  INX
+  INX
+  INX
+  BNE clear_oam
 
-	; initialize zero-page values
-	LDA #$80
-	STA player_x
-	LDA #$a0
-	STA player_y
+  ; initialize zero-page values
+  LDA #$80
+  STA player_x
+  LDA #$a0
+  STA player_y
 
 vblankwait2:
   BIT $2002

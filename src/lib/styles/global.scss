@@ -274,107 +274,107 @@ a:link::-moz-selection {
 }
 
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
-	a:link {
-		background-position-y: 87%, 87%, 87%;
-	}
+  a:link {
+    background-position-y: 87%, 87%, 87%;
+  }
 }
 
 img {
-	max-width: 100%;
+  max-width: 100%;
 }
 
 div.fullwidth,
 table.fullwidth {
-	width: 100%;
+  width: 100%;
 }
 
 div.table-wrapper {
-	overflow-x: auto;
+  overflow-x: auto;
 }
 
 div.table-wrapper th,
 div.table-wrapper td {
-	padding: 0.2rem 2rem;
-	text-align: left;
-	font-size: 1.2rem;
+  padding: 0.2rem 2rem;
+  text-align: left;
+  font-size: 1.2rem;
 }
 
 div.table-wrapper th {
-	text-decoration: underline;
+  text-decoration: underline;
   font-size: 1.3rem;
 }
 
 div.table-wrapper td:first-child,
 div.table-wrapper th:first-child {
-	padding-left: 0;
+  padding-left: 0;
 }
 
 div.table-wrapper td:last-child,
 div.table-wrapper td:last-child {
-	padding-right: 0;
+  padding-right: 0;
 }
 
 div.table-wrapper:has(+ canvas) {
-	margin-bottom: 4rem;
+  margin-bottom: 4rem;
 }
 
 .table-of-contents {
-	list-style-type: none;
+  list-style-type: none;
 }
 
 .table-of-contents li:before {
-	content: '- ';
+  content: '- ';
 }
 
 .chapter-links {
-	display: flex;
-	justify-content: space-between;
-	width: 55%;
+  display: flex;
+  justify-content: space-between;
+  width: 55%;
 }
 
 code {
-	color: #88030f;
-	// font-family: 'Victor Mono', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  color: #88030f;
   font-family: 'DejaVu Sans Mono';
-	font-size: 1.25rem;
-	line-height: 1.42;
+  font-size: 1.25rem;
+  line-height: 1.42;
 }
 
 h1 > code,
 h2 > code,
 h3 > code {
-	font-size: 0.8em;
+  font-size: 0.8em;
 }
 
 pre code {
   background: #292d3e;
   display: block;
-	padding: 1em;
-	margin: 0 0 0.5em;
-	max-width: 55%;
+  padding: 1em;
+  margin: 0 0 0.5em;
+  max-width: 55%;
+  overflow-x: scroll;
 }
 
 pre[data-code-title]::before {
-	background: #eee;
-	border: 1px solid #292929;
-	color: #292929;
-	content: attr(data-code-title);
-	display: block;
-	font-style: italic;
-	max-width: 55.02%;
-	padding: 0.5rem 1rem;
+  background: #eee;
+  border: 1px solid #292929;
+  color: #292929;
+  content: attr(data-code-title);
+  display: block;
+  font-style: italic;
+  max-width: 55.02%;
+  padding: 0.5rem 1rem;
 }
 
 code[data-line-numbers] > span[data-line-number]::before {
-	content: attr(data-line-number);
+  content: attr(data-line-number);
   border-right: 1px dashed gray;
-	display: inline-block;
-	width: 1rem;
-	padding-right: 1.5rem;
+  display: inline-block;
+  width: 1rem;
+  padding-right: 1.5rem;
   margin-right: 0.5rem;
-	margin-left: 1rem;
-	text-align: right;
-	color: gray;
+  margin-left: 1rem;
+  text-align: right;
+  color: gray;
   -webkit-user-select: none;
   user-select: none;
 }

@@ -87,8 +87,8 @@ sleeping: .res 1
 
 .export main
 .proc main
-	LDA #239	 ; Y is only 240 lines tall!
-	STA scroll
+  LDA #239	 ; Y is only 240 lines tall!
+  STA scroll
 
   ; write a palette
   LDX PPUSTATUS
@@ -103,102 +103,102 @@ load_palettes:
   CPX #$20
   BNE load_palettes
 
-	; write nametables
-	LDX #$20
-	JSR draw_starfield
+  ; write nametables
+  LDX #$20
+  JSR draw_starfield
 
-	LDX #$28
-	JSR draw_starfield
+  LDX #$28
+  JSR draw_starfield
 
-	JSR draw_objects
+  JSR draw_objects
 
-	; set up enemy slots
-	LDA #$00
-	STA current_enemy
-	STA current_enemy_type
+  ; set up enemy slots
+  LDA #$00
+  STA current_enemy
+  STA current_enemy_type
 
-	LDX #$00
+  LDX #$00
 turtle_data:
-	LDA #$00 ; turtle
-	STA enemy_flags,X
-	LDA #$01
-	STA enemy_y_vels,X
-	INX
-	CPX #$03
-	BNE turtle_data
-	; X is now $03, no need to reset
+  LDA #$00 ; turtle
+  STA enemy_flags,X
+  LDA #$01
+  STA enemy_y_vels,X
+  INX
+  CPX #$03
+  BNE turtle_data
+  ; X is now $03, no need to reset
 snake_data:
-	LDA #$01
-	STA enemy_flags,X
-	LDA #$02
-	STA enemy_y_vels,X
-	INX
-	CPX #$05
-	BNE snake_data
+  LDA #$01
+  STA enemy_flags,X
+  LDA #$02
+  STA enemy_y_vels,X
+  INX
+  CPX #$05
+  BNE snake_data
 
-	LDX #$00
-	LDA #$10
+  LDX #$00
+  LDA #$10
 setup_enemy_x:
-	STA enemy_x_pos,X
-	CLC
-	ADC #$20
-	INX
-	CPX #NUM_ENEMIES
-	BNE setup_enemy_x
+  STA enemy_x_pos,X
+  CLC
+  ADC #$20
+  INX
+  CPX #NUM_ENEMIES
+  BNE setup_enemy_x
 
 vblankwait:       ; wait for another vblank before continuing
   BIT PPUSTATUS
   BPL vblankwait
 
   LDA #%10010000  ; turn on NMIs, sprites use first pattern table
-	STA ppuctrl_settings
+  STA ppuctrl_settings
   STA PPUCTRL
   LDA #%00011110  ; turn on screen
   STA PPUMASK
 
 mainloop:
-	; Read controllers.
-	JSR read_controller1
+  ; Read controllers.
+  JSR read_controller1
 
-	; Update the player and prep to draw
-	JSR update_player
-	JSR draw_player
+  ; Update the player and prep to draw
+  JSR update_player
+  JSR draw_player
 
-	; Process all enemies
-	JSR process_enemies
+  ; Process all enemies
+  JSR process_enemies
 
-	; Draw all enemies
-	LDA #$00
-	STA current_enemy
+  ; Draw all enemies
+  LDA #$00
+  STA current_enemy
 enemy_drawing:
-	JSR draw_enemy
-	INC current_enemy
-	LDA current_enemy
-	CMP #NUM_ENEMIES
-	BNE enemy_drawing
+  JSR draw_enemy
+  INC current_enemy
+  LDA current_enemy
+  CMP #NUM_ENEMIES
+  BNE enemy_drawing
 
-	; Check if PPUCTRL needs to change
-	LDA scroll ; did we reach the end of a nametable?
-	BNE update_scroll
+  ; Check if PPUCTRL needs to change
+  LDA scroll ; did we reach the end of a nametable?
+  BNE update_scroll
   ; if yes,
   ; Update base nametable
   LDA ppuctrl_settings
   EOR #%00000010 ; flip bit 1 to its opposite
   STA ppuctrl_settings
-	; Reset scroll to 240
+  ; Reset scroll to 240
   LDA #240
   STA scroll
 
 update_scroll:
-	DEC scroll
+  DEC scroll
 
-	; Done processing; wait for next Vblank
-	INC sleeping
+  ; Done processing; wait for next Vblank
+  INC sleeping
 sleep:
-	LDA sleeping
-	BNE sleep
+  LDA sleeping
+  BNE sleep
 
-	JMP mainloop
+  JMP mainloop
 .endproc
 
 .segment "VECTORS"

@@ -15,34 +15,50 @@ ppuctrl_settings: .res 1
 .endproc
 
 .proc nmi_handler
+  ; save registers
+  PHP
+  PHA
+  TXA
+  PHA
+  TYA
+  PHA
+
   LDA #$00
   STA OAMADDR
   LDA #$02
   STA OAMDMA
-	LDA #$00
+  LDA #$00
 
   ; update tiles *after* DMA transfer
-	JSR update_player
+  JSR update_player
   JSR draw_player
 
-	LDA scroll
-	CMP #$00 ; did we scroll to the end of a nametable?
-	BNE set_scroll_positions
-	; if yes,
-	; Update base nametable
-	LDA ppuctrl_settings
-	EOR #%00000010 ; flip bit 1 to its opposite
-	STA ppuctrl_settings
-	STA PPUCTRL
-	LDA #240
-	STA scroll
+  LDA scroll
+  CMP #$00 ; did we scroll to the end of a nametable?
+  BNE set_scroll_positions
+  ; if yes,
+  ; Update base nametable
+  LDA ppuctrl_settings
+  EOR #%00000010 ; flip bit 1 to its opposite
+  STA ppuctrl_settings
+  STA PPUCTRL
+  LDA #240
+  STA scroll
 
 set_scroll_positions:
-	LDA #$00 ; X scroll first
-	STA PPUSCROLL
-	DEC scroll
-	LDA scroll ; then Y scroll
-	STA PPUSCROLL
+  LDA #$00 ; X scroll first
+  STA PPUSCROLL
+  DEC scroll
+  LDA scroll ; then Y scroll
+  STA PPUSCROLL
+
+  ; restore registers
+  PLA
+  TAY
+  PLA
+  TAX
+  PLA
+  PLP
 
   RTI
 .endproc
@@ -53,8 +69,8 @@ set_scroll_positions:
 
 .export main
 .proc main
-	LDA #239	 ; Y is only 240 lines tall!
-	STA scroll
+  LDA #239	 ; Y is only 240 lines tall!
+  STA scroll
 
   ; write a palette
   LDX PPUSTATUS
@@ -69,21 +85,21 @@ load_palettes:
   CPX #$20
   BNE load_palettes
 
-	; write nametables
-	LDX #$20
-	JSR draw_starfield
+  ; write nametables
+  LDX #$20
+  JSR draw_starfield
 
-	LDX #$28
-	JSR draw_starfield
+  LDX #$28
+  JSR draw_starfield
 
-	JSR draw_objects
+  JSR draw_objects
 
 vblankwait:       ; wait for another vblank before continuing
   BIT PPUSTATUS
   BPL vblankwait
 
   LDA #%10010000  ; turn on NMIs, sprites use first pattern table
-	STA ppuctrl_settings
+  STA ppuctrl_settings
   STA PPUCTRL
   LDA #%00011110  ; turn on screen
   STA PPUMASK
@@ -93,13 +109,6 @@ forever:
 .endproc
 
 .proc update_player
-  PHP
-  PHA
-  TXA
-  PHA
-  TYA
-  PHA
-
   LDA player_x
   CMP #$e0
   BCC not_at_right_edge
@@ -128,25 +137,11 @@ direction_set:
 move_right:
   INC player_x
 exit_subroutine:
-  ; all done, clean up and return
-  PLA
-  TAY
-  PLA
-  TAX
-  PLA
-  PLP
+  ; all done, return
   RTS
 .endproc
 
 .proc draw_player
-  ; save registers
-  PHP
-  PHA
-  TXA
-  PHA
-  TYA
-  PHA
-
   ; write player ship tile numbers
   LDA #$05
   STA $0201
@@ -198,13 +193,7 @@ exit_subroutine:
   ADC #$08
   STA $020f
 
-  ; restore registers and return
-  PLA
-  TAY
-  PLA
-  TAX
-  PLA
-  PLP
+  ; return
   RTS
 .endproc
 

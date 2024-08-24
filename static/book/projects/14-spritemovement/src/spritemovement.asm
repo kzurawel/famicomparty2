@@ -13,18 +13,36 @@ player_dir: .res 1
 .endproc
 
 .proc nmi_handler
+  ; save registers
+  PHP
+  PHA
+  TXA
+  PHA
+  TYA
+  PHA
+
   LDA #$00
   STA OAMADDR
   LDA #$02
   STA OAMDMA
-	LDA #$00
+  LDA #$00
 
   ; update tiles *after* DMA transfer
-	JSR update_player
+  JSR update_player
   JSR draw_player
 
-	STA $2005
-	STA $2005
+  LDA #$00
+  STA $2005
+  STA $2005
+
+  ; restore registers
+  PLA
+  TAY
+  PLA
+  TAX
+  PLA
+  PLP
+
   RTI
 .endproc
 
@@ -45,134 +63,134 @@ load_palettes:
   CPX #$20
   BNE load_palettes
 
-	; write nametables
-	; big stars first
-	LDA PPUSTATUS
-	LDA #$20
-	STA PPUADDR
-	LDA #$6b
-	STA PPUADDR
-	LDX #$2f
-	STX PPUDATA
+  ; write nametables
+  ; big stars first
+  LDA PPUSTATUS
+  LDA #$20
+  STA PPUADDR
+  LDA #$6b
+  STA PPUADDR
+  LDX #$2f
+  STX PPUDATA
 
-	LDA PPUSTATUS
-	LDA #$21
-	STA PPUADDR
-	LDA #$57
-	STA PPUADDR
-	STX PPUDATA
+  LDA PPUSTATUS
+  LDA #$21
+  STA PPUADDR
+  LDA #$57
+  STA PPUADDR
+  STX PPUDATA
 
-	LDA PPUSTATUS
-	LDA #$22
-	STA PPUADDR
-	LDA #$23
-	STA PPUADDR
-	STX PPUDATA
+  LDA PPUSTATUS
+  LDA #$22
+  STA PPUADDR
+  LDA #$23
+  STA PPUADDR
+  STX PPUDATA
 
-	LDA PPUSTATUS
-	LDA #$23
-	STA PPUADDR
-	LDA #$52
-	STA PPUADDR
-	STX PPUDATA
+  LDA PPUSTATUS
+  LDA #$23
+  STA PPUADDR
+  LDA #$52
+  STA PPUADDR
+  STX PPUDATA
 
-	; next, small star 1
-	LDA PPUSTATUS
-	LDA #$20
-	STA PPUADDR
-	LDA #$74
-	STA PPUADDR
-	LDX #$2d
-	STX PPUDATA
+  ; next, small star 1
+  LDA PPUSTATUS
+  LDA #$20
+  STA PPUADDR
+  LDA #$74
+  STA PPUADDR
+  LDX #$2d
+  STX PPUDATA
 
-	LDA PPUSTATUS
-	LDA #$21
-	STA PPUADDR
-	LDA #$43
-	STA PPUADDR
-	STX PPUDATA
+  LDA PPUSTATUS
+  LDA #$21
+  STA PPUADDR
+  LDA #$43
+  STA PPUADDR
+  STX PPUDATA
 
-	LDA PPUSTATUS
-	LDA #$21
-	STA PPUADDR
-	LDA #$5d
-	STA PPUADDR
-	STX PPUDATA
+  LDA PPUSTATUS
+  LDA #$21
+  STA PPUADDR
+  LDA #$5d
+  STA PPUADDR
+  STX PPUDATA
+ 
+  LDA PPUSTATUS
+  LDA #$21
+  STA PPUADDR
+  LDA #$73
+  STA PPUADDR
+  STX PPUDATA
 
-	LDA PPUSTATUS
-	LDA #$21
-	STA PPUADDR
-	LDA #$73
-	STA PPUADDR
-	STX PPUDATA
+  LDA PPUSTATUS
+  LDA #$22
+  STA PPUADDR
+  LDA #$2f
+  STA PPUADDR
+  STX PPUDATA
 
-	LDA PPUSTATUS
-	LDA #$22
-	STA PPUADDR
-	LDA #$2f
-	STA PPUADDR
-	STX PPUDATA
+  LDA PPUSTATUS
+  LDA #$22
+  STA PPUADDR
+  LDA #$f7
+  STA PPUADDR
+  STX PPUDATA
+ 
+  ; finally, small star 2
+  LDA PPUSTATUS
+  LDA #$20
+  STA PPUADDR
+  LDA #$f1
+  STA PPUADDR
+  LDX #$2e
+  STX PPUDATA
 
-	LDA PPUSTATUS
-	LDA #$22
-	STA PPUADDR
-	LDA #$f7
-	STA PPUADDR
-	STX PPUDATA
+  LDA PPUSTATUS
+  LDA #$21
+  STA PPUADDR
+  LDA #$a8
+  STA PPUADDR
+  STX PPUDATA
 
-	; finally, small star 2
-	LDA PPUSTATUS
-	LDA #$20
-	STA PPUADDR
-	LDA #$f1
-	STA PPUADDR
-	LDX #$2e
-	STX PPUDATA
+  LDA PPUSTATUS
+  LDA #$22
+  STA PPUADDR
+  LDA #$7a
+  STA PPUADDR
+  STX PPUDATA
 
-	LDA PPUSTATUS
-	LDA #$21
-	STA PPUADDR
-	LDA #$a8
-	STA PPUADDR
-	STX PPUDATA
+  LDA PPUSTATUS
+  LDA #$23
+  STA PPUADDR
+  LDA #$44
+  STA PPUADDR
+  STX PPUDATA
 
-	LDA PPUSTATUS
-	LDA #$22
-	STA PPUADDR
-	LDA #$7a
-	STA PPUADDR
-	STX PPUDATA
+  LDA PPUSTATUS
+  LDA #$23
+  STA PPUADDR
+  LDA #$7c
+  STA PPUADDR
+  STX PPUDATA
 
-	LDA PPUSTATUS
-	LDA #$23
-	STA PPUADDR
-	LDA #$44
-	STA PPUADDR
-	STX PPUDATA
+  ; finally, attribute table
+  LDA PPUSTATUS
+  LDA #$23
+  STA PPUADDR
+  LDA #$c2
+  STA PPUADDR
+  LDA #%01000000
+  STA PPUDATA
 
-	LDA PPUSTATUS
-	LDA #$23
-	STA PPUADDR
-	LDA #$7c
-	STA PPUADDR
-	STX PPUDATA
-
-	; finally, attribute table
-	LDA PPUSTATUS
-	LDA #$23
-	STA PPUADDR
-	LDA #$c2
-	STA PPUADDR
-	LDA #%01000000
-	STA PPUDATA
-
-	LDA PPUSTATUS
-	LDA #$23
-	STA PPUADDR
-	LDA #$e0
-	STA PPUADDR
-	LDA #%00001100
-	STA PPUDATA
+  LDA PPUSTATUS
+  LDA #$23
+  STA PPUADDR
+  LDA #$e0
+  STA PPUADDR
+  LDA #%00001100
+  STA PPUDATA
 
 vblankwait:       ; wait for another vblank before continuing
   BIT PPUSTATUS
@@ -188,13 +206,6 @@ forever:
 .endproc
 
 .proc update_player
-  PHP
-  PHA
-  TXA
-  PHA
-  TYA
-  PHA
-
   LDA player_x
   CMP #$e0
   BCC not_at_right_edge
@@ -223,25 +234,11 @@ direction_set:
 move_right:
   INC player_x
 exit_subroutine:
-  ; all done, clean up and return
-  PLA
-  TAY
-  PLA
-  TAX
-  PLA
-  PLP
+  ; all done, return
   RTS
 .endproc
 
 .proc draw_player
-  ; save registers
-  PHP
-  PHA
-  TXA
-  PHA
-  TYA
-  PHA
-
   ; write player ship tile numbers
   LDA #$05
   STA $0201
@@ -293,13 +290,7 @@ exit_subroutine:
   ADC #$08
   STA $020f
 
-  ; restore registers and return
-  PLA
-  TAY
-  PLA
-  TAX
-  PLA
-  PLP
+  ; return to where subroutine was called
   RTS
 .endproc
 

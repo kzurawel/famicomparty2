@@ -3,13 +3,6 @@
 
 .export update_player
 .proc update_player
-  PHP  ; Start by saving registers,
-  PHA  ; as usual.
-  TXA
-  PHA
-  TYA
-  PHA
-
   LDA pad1        ; Load button presses
   AND #BTN_LEFT   ; Filter out all but Left
   BEQ check_right ; If result is zero, left not pressed
@@ -30,25 +23,11 @@ check_down:
   BEQ done_checking
   INC player_y
 done_checking:
-  PLA ; Done with updates, restore registers
-  TAY ; and return to where we called this
-  PLA
-  TAX
-  PLA
-  PLP
   RTS
 .endproc
 
 .export draw_player
 .proc draw_player
-  ; save registers
-  PHP
-  PHA
-  TXA
-  PHA
-  TYA
-  PHA
-
   ; write player ship tile numbers
   LDA #$05
   STA $0201
@@ -100,12 +79,6 @@ done_checking:
   ADC #$08
   STA $020f
 
-  ; restore registers and return
-  PLA
-  TAY
-  PLA
-  TAX
-  PLA
-  PLP
+  ; return
   RTS
 .endproc

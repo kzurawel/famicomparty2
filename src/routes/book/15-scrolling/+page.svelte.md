@@ -460,6 +460,14 @@ code here first and then explain it.
 
 ```ca65 showLineNumbers{17}
 .proc nmi_handler
+  ; save registers
+  PHP
+  PHA
+  TXA
+  PHA
+  TYA
+  PHA
+
   LDA #$00
   STA OAMADDR
   LDA #$02
@@ -489,12 +497,20 @@ set_scroll_positions:
   LDA scroll ; then Y scroll
   STA PPUSCROLL
 
+  ; restore registers
+  PLA
+  TAY
+  PLA
+  TAX
+  PLA
+  PLP
+
   RTI
 .endproc
 ```
 
 The top part of this code is unchanged from the previous example.
-Our new scroll code begins at line 28. Note that you must _always_
+Our new scroll code begins at line 36. Note that you must _always_
 set scroll positions at the end of the NMI handler, right before
 `RTI`. If you set scroll positions earlier, other writes to PPU
 memory can interfere with how the PPU calculates scroll positions,

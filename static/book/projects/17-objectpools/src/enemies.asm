@@ -7,13 +7,6 @@ NUM_ENEMIES = 5
 
 .export update_enemy
 .proc update_enemy
-  PHP
-  PHA
-  TXA
-  PHA
-  TYA
-  PHA
-
   ; Check if this enemy is active.
   LDX current_enemy
   LDA enemy_flags,X
@@ -34,25 +27,11 @@ NUM_ENEMIES = 5
   STA enemy_flags,X
 
 done:
-  PLA
-  TAY
-  PLA
-  TAX
-  PLA
-  PLP
   RTS
 .endproc
 
 .export process_enemies
 .proc process_enemies
-  ; Push registers onto the stack
-  PHP
-  PHA
-  TXA
-  PHA
-  TYA
-  PHA
-
   ; Start with enemy zero.
   LDX #$00
 
@@ -108,26 +87,11 @@ decrement:
   DEC enemy_timer
 
 done:
-  ; Restore registers, then return
-  PLA
-  TAY
-  PLA
-  TAX
-  PLA
-  PLP
-
   RTS
 .endproc
 
 .export draw_enemy
 .proc draw_enemy
-  PHP
-  PHA
-  TXA
-  PHA
-  TYA
-  PHA
-
   ; First, check if the enemy is active.
 	LDX current_enemy
 	LDA enemy_flags,X
@@ -232,12 +196,6 @@ oam_address_found:
   STA $0200,Y
 
 done:
-  PLA
-  TAY
-  PLA
-  TAX
-  PLA
-  PLP
   RTS
 .endproc
 
