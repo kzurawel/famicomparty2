@@ -193,7 +193,7 @@ we are using in the background. This code is telling the PPU to store `$29` at a
 
 ### Memory-Mapped I/O
 
-On the NES, addresses in the `$2000`-`$6000` range are reserved for use as
+On the NES, addresses in the `$2000`-`$5FFF` range are reserved for use as
 _memory-mapped I/O_ (or "MMIO") addresses. "I/O" is "input/output" - sending data between different devices.
 "Memory-mapped" means that these interfaces to other devices are mapped to memory addresses - in
 other words, certain memory addresses are not memory at all, but rather connections to other

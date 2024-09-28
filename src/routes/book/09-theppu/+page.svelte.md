@@ -81,9 +81,9 @@ range of visual representations while still fitting within the memory limitation
 CHR-ROM.
 
 <figure>
-  <img src={mariosprites} alt="Sprites pattern table from Super Mario Bros." />
-  <img src={mariobgs} alt="Background pattern table from Super Mario Bros." />
-  <figcaption>The sprite and background tables from <em>Super Mario Bros.</em>. Anything drawn
+  <img src={mariosprites} alt="Sprites pattern table from Vs. Super Mario Bros." />
+  <img src={mariobgs} alt="Background pattern table from Vs. Super Mario Bros." />
+  <figcaption>The sprite and background tables from <em>Vs. Super Mario Bros.</em>. Anything drawn
 during the course of the game is present in these two tables, including Mario himself
 (represented in the first five rows of the sprite table); all of the game's enemies;
 text and score graphics (the first three rows of the background table); and the
@@ -168,7 +168,8 @@ For emulators, a game's mirroring setting is part of its iNES header.
   <img src={bfight} alt="" />
   <figcaption>The internals of a <em>Balloon Fight</em> cartridge. The red rectangle shows the
 "V"/"H" contacts; whichever pair of contacts is soldered together will determine
-whether the game uses vertical or horizontal mirroring. Image from
+whether the game uses vertical or horizontal mirroring. The "V" contact sets "vertical layout"
+(horizontal mirroring) and the "H" contact sets "horizontal layout" (vertical mirroring). Image from
 <a href="http://bootgod.dyndns.org:7777">NES Cart Database</a>.</figcaption>
 </figure>
 

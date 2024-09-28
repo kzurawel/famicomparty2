@@ -197,31 +197,31 @@ Let's look at a few examples.
 ```ca65
   ; Our starting byte - equivalent to decimal 15
   LDA #%00001111
-  STA $8000
+  STA $0300
 
   ; Shift left.
-  ASL $8000
-  ; Memory address $8000 now contains 00011110,
+  ASL $0300
+  ; Memory address $0300 now contains 00011110,
   ; equivalent to decimal 30.
   ; The carry flag contains 0, because
   ; that was the left-most bit.
 
   ; Shift back to the right.
-  LSR $8000
-  ; Memory address $8000 is now back to 00001111.
+  LSR $0300
+  ; Memory address $0300 is now back to 00001111.
   ; The carry flag still contains 0.
 
   ; Shift right again.
-  LSR $8000
-  ; Memory address $8000 now contains 00000111,
+  LSR $0300
+  ; Memory address $0300 now contains 00000111,
   ; equivalent to decimal 7.
   ; Note that the carry flag is now 1 - when
   ; the rightmost bit was shifted right, it went
   ; into the carry flag.
 
   ; This time, let's rotate right.
-  ROR $8000
-  ; Memory address $8000 now contains 10000011,
+  ROR $0300
+  ; Memory address $0300 now contains 10000011,
   ; and the carry flag contains 1 again.
   ; What happened?
   ; The "1" from the carry flag moved into the
@@ -230,21 +230,21 @@ Let's look at a few examples.
   ; carry flag.
 
   ; Let's do that a few more times:
-  ROR $8000
-  ; Memory address $8000: 11000001, carry flag: 1
-  ROR $8000
-  ; Memory address $8000: 11100000, carry flag: 1
-  ROR $8000
-  ; Memory address $8000: 11110000, carry flag: 0
-  ROR $8000
-  ; Memory address $8000: 01111000, carry flag: 0
+  ROR $0300
+  ; Memory address $0300: 11000001, carry flag: 1
+  ROR $0300
+  ; Memory address $0300: 11100000, carry flag: 1
+  ROR $0300
+  ; Memory address $0300: 11110000, carry flag: 0
+  ROR $0300
+  ; Memory address $0300: 01111000, carry flag: 0
 
   ; We can also shift or rotate the accumulator directly:
-  LDA $8000
+  LDA $0300
   ROL A
   LSR A
   ; The results of the rotate and shift are only in
-  ; the accumulator, not stored back into $8000.
+  ; the accumulator, not stored back into $0300.
 ```
 
 ### Ring Counters

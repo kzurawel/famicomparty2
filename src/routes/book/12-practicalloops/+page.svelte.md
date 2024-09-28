@@ -31,36 +31,36 @@ addressing mode, write a memory address, a comma, and then a register name.
   LDA $8000,X
 ```
 
-The example code above will fetch the contents of memory address (`$8000`
-+ the value of the X register). If the current value of the X register is `$05`,
+The example code above will fetch the contents of memory address (`$8000` + the
+value of the X register). If the current value of the X register is `$05`,
 then the command `LDA $8000,X` will fetch the contents of memory
 address `$8005`.
 
 Using indexed mode allows us to perform actions across a range of memory addresses
 with ease. As a simple example, here is a code snippet that will set the
-256 bytes of memory from `$3000` to `$30FF` to `$00`.
+256 bytes of memory from `$0300` to `$03FF` to `$00`.
 
 ```ca65
   LDA #$00
   TAX
-clear_zeropage:
-  STA $3000,X
+clear_memory:
+  STA $0300,X
   INX
-  BNE clear_zeropage
+  BNE clear_memory
 ```
 
 To review, line 1 above sets the accumulator to zero (`#$00`),
 and then line 2 copies that zero to the X register. Line 4 stores the zero
-from the accumulator to memory address (`$3000` plus X register), which
-will be `$3000` the first time through the loop. Line 5 increments the X
+from the accumulator to memory address (`$0300` plus X register), which
+will be `$0300` the first time through the loop. Line 5 increments the X
 register, and then line 6 checks the status of the zero flag in the
 processor status register. If the last operation was not equal to zero,
 we return to the label at line 3. When we increment the X register from
 zero to one, the result of the last operation is one, so the zero
 flag will not be set and the loop will repeat again. The next time
 through the loop, when we reach line 4, the zero from the accumulator
-will be stored again at memory address (`$3000` plus X register), which
-will now be memory address `$3001`. The loop will repeat until
+will be stored again at memory address (`$0300` plus X register), which
+will now be memory address `$0301`. The loop will repeat until
 the X register is already `$ff` and the increment at line 5
 changes the X register to `$00`.
 

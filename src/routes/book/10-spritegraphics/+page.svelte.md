@@ -61,7 +61,7 @@ games, so that all 64 sprites can move smoothly every frame.
 To use this high-speed copying, the CPU needs to have all of the sprite
 data ready to go in a contiguous page of memory. (A _page_
 is a block of 256 bytes.) Generally, this "sprite buffer" is placed
-in CPU memory addresses `$0200`-`$02ff`.<Margin id="memory-map-notes">A few things to note about the memory map image here. First, "RAM" is listed as extending from $0300-$0800. In reality, the entire range from $0000-$0800 is RAM (2KB); the region from $0300-$0800 is just the portion of RAM that is not commonly allocated for a specific purpose. The region from $0800-$2000 in the memory map is empty space - writes to that region of memory will silently fail, and reads from that range have undefined behavior. Finally, note that the entire area from $8000-$FFFF comes from the PRG-ROM chip on the cartridge, including the six bytes that define the locations of interrupt handlers.</Margin>
+in CPU memory addresses `$0200`-`$02ff`.<Margin id="memory-map-notes">A few things to note about the memory map image here. First, "RAM" is listed as extending from $0300-$07FF. In reality, the entire range from $0000-$07FF is RAM (2KB); the region from $0300-$07FF is just the portion of RAM that is not commonly allocated for a specific purpose. The region from $0800-$1FFF in the memory map is a mirror of the memory from $0000-$07FF (essentially, the higher bits of the address are ignored). Writes and reads to that area actually write to or read from an address within $0000-$07FF. Finally, note that the entire area from $8000-$FFFF comes from the PRG-ROM chip on the cartridge, including the six bytes that define the locations of interrupt handlers.</Margin>
 
 <figure>
   <img src={memmap} alt="" />
@@ -169,8 +169,11 @@ accumulator.<Margin id="addressing-modes">In case you've forgotten: a number giv
 not a memory address.</Margin> On line 3, we store (write) this zero to the OAMADDR address.
 This tells the PPU to prepare for a transfer to OAM starting at byte zero.
 Next, we load the literal value two into the accumulator, and write
-it to OAMDMA. This tells the PPU to initiate a high-speed transfer
-of the 256 bytes from $0200-$02ff into OAM.
+it to OAMDMA. This tells the CPU to initiate a high-speed transfer
+of the 256 bytes from $0200-$02ff into OAM. The process takes 512 CPU cycles,
+which is much faster than loading data from memory into a register and copying
+it byte-by-byte to PPUDATA. During that time, the CPU does not run any
+other instructions.
 
 In order to use `OAMADDR` and `OAMDMA` in our code,
 we need to update our constants file to include these new constants.

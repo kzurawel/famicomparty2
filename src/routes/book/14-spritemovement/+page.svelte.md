@@ -171,12 +171,12 @@ means putting it on top of the pile, and only the top-most element
 is available at any given time.
 
 On the 6502, the stack is 256 bytes in size and is located at
-`$0300` to `$03ff`. The 6502 uses a special register,
+`$0100` to `$01ff`. The 6502 uses a special register,
 the "stack pointer" (often abbreviated "S"), to indicate where the
 "top" of the stack is. When the system is first initialized, the
 value of the stack pointer is `$ff`. Every time something is stored
-on the stack, it is written to `$0300` plus the address held in the stack pointer
-(e.g., the first write to the stack is stored at `$03ff`), and
+on the stack, it is written to `$0100` plus the address held in the stack pointer
+(e.g., the first write to the stack is stored at `$01ff`), and
 then the stack pointer is decremented by one.<Margin id="stackoverflow">Attempting to write more than 256 items to the stack at one time causes the stack pointer to wrap around from $00 to $ff, meaning that further writes to the stack will overwrite already existing stack data. This generally-catastrophic scenario is called a <em>stack overflow</em> (though in the case of the 6502, it's more properly called a stack <em>underflow</em>).</Margin> When a value is removed from the stack, the stack pointer
 is incremented by one.
 
@@ -220,7 +220,6 @@ Let's look at how you might use these new opcodes in your NMI handler:
 
 ```ca65
 .proc nmi_handler
-  PHP
   PHA
   TXA
   PHA
@@ -234,29 +233,27 @@ Let's look at how you might use these new opcodes in your NMI handler:
   PLA
   TAX
   PLA
-  PLP
   RTI
 .endproc
 ```
 
 When the NMI handler is called, the
 first six opcodes preserve the state of the registers on the stack
-before doing anything else. `PHP`, storing the state of the processor
-status register, comes first, because the processor status register
-is updated after every instruction - if we waited until the end to
-store P, it would likely be modified by the results of instructions
-like `TXA`. With the processor status register stored away on the
-stack, we next push the value of the accumulator, and then transfer and
+before doing anything else. First, we push the value of the accumulator, and then transfer and
 push the values of the X and Y registers. With everything stored on
 the stack, we are free to use all of the 6502's registers without
 worrying about what the code that was interrupted expects
 to find in them. Once the NMI handler is finished, we reverse
 all of the storing we did at the beginning. We restore everything in the
 opposite order of how we stored it, first pulling and transferring to
-the Y and X registers, then the accumulator, and then the processor
-status register. Finally, we end with `RTI`, which returns program flow
+the Y and X registers, then the accumulator. Finally, we end with `RTI`, which returns program flow
 to the point where the NMI handler was called. For a subroutine, we
-would end with `RTS` (Return from Subroutine) instead.<Margin id="rts">If you forget to include <code>RTS</code> at the end of your subroutine, the 6502 will not return to where the subroutine was called and will instead happily continue with the next byte after your subroutine code. The processor doesn't know anything about <code>.proc</code>s, they are simply a tool to help <em>you</em> organize your code.</Margin>
+would end with `RTS` (Return from Subroutine) instead.<Margin id="rts">If you forget to include <code>RTS</code> at the end of your subroutine, the 6502 will not return to where the subroutine was called and will instead happily continue with the next byte after your subroutine code. The processor doesn't know anything about <code>.proc</code>s, they are simply a tool to help <em>you</em> organize your code.<br><br>
+Additionally, subroutines might need to add `PHP` at the beginning and `PLP` at the end to save and restore the processor status register.
+`PHP` must be run before any other opcode, and `PLP` must be the last instruction before `RTS`, because most opcodes change
+the value of the processor status register. Here, we don't need it, because interrupts automatically save and restore the processor
+status register. If the state of the processor status register does not matter (because, for example, you explicitly check for
+flags before trying to make use of them), then your subroutines can skip `PHP`/`PLP` as well.</Margin>
 
 
 ## Your First Subroutine: Drawing the Player
@@ -387,7 +384,6 @@ every frame:
 ```ca65 showLineNumbers{15}
 .proc nmi_handler
   ; save registers
-  PHP
   PHA
   TXA
   PHA
@@ -412,7 +408,6 @@ every frame:
   PLA
   TAX
   PLA
-  PLP
 
   RTI
 .endproc

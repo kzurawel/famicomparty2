@@ -162,8 +162,9 @@ or decrement the contents of a memory address. As an example, you could
 use `INC $05` to add one to whatever is stored at memory address
 `$05`, and store the result back in `$05`.
 
-All of the increment/decrement opcodes will update the values of the
-zero and carry flags of the processor status register.
+All of the increment/decrement opcodes will update the value of the
+zero flag of the processor status register, but they do not affect the carry
+flag.
 
 ### Branching Opcodes
 
@@ -220,10 +221,10 @@ with X register", and `CPY`, "Compare with Y register".
 
 Each of these opcodes works by performing a subtraction, setting the zero
 and carry flags as appropriate, and then discarding the result of the
-subtraction. Remember that when we perform a subtraction, we first
-set the carry flag. This means that we have three possible outcomes
-from a comparison, based on the register value and the value we are comparing
-it to:
+subtraction. (Normally, when we perform a subtraction, we set the carry flag
+first, but the comparison opcodes ignore the initial state of the carry flag.)
+This means that we have three possible outcomes from a comparison, based on
+the register value and the value we are comparing it to:
 
 1. _Register is larger than comparison value_: Carry flag set, zero flag clear
 2. _Register is equal to comparison value_: Carry flag set, zero flag set
