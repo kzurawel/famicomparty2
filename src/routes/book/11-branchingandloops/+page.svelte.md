@@ -124,8 +124,9 @@ cleared. When we get to `BNE LoopStart`, because the zero flag is cleared,
 the processor will go back to the `LoopStart` label and run through the loop
 again. This time, the X register will become two, which is still not zero, and the loop
 will run again. Eventually, the X register's value will be 255. When we run `INX`
-this time, the X register will "roll over" to zero, and the carry flag will be
-set.<Margin id="zero-or-carry">Note that in this case, we could have branched based on either the zero flag or the carry flag. When the X register "rolls over" from 255 to 0, both the zero and carry flags will be set.</Margin> Now
+this time, the X register will "roll over" to zero.<Margin id="zero-or-carry">Note that
+`INX` and `INY` do not affect the carry flag! Only `ADC`, `SBC`, and a few other opcodes
+we will meet later change the carry flag.</Margin> Now
 that the last operation resulted in a zero, `BNE LoopStart` will no
 longer be triggered, and the processor will continue on to whatever comes after the
 loop.
